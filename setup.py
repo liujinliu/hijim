@@ -6,6 +6,16 @@ from setuptools import find_packages
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
+def _find_requires():
+    with open(os.path.join(HERE, 'requirments.txt')) as f:
+        lines = f.readlines()
+        requires = []
+        for line in lines:
+            if line.strip():
+                requires.append(line.strip())
+        return requires
+
+
 def _setup():
     setuptools.setup(
         name='hijim',
@@ -13,13 +23,9 @@ def _setup():
         description='',
         long_description='',
         author='liujinliu',
-        url='https://github.com/liujinliu',
+        url='https://gitee.com/liujinliu/hijim',
         license='Apache',
-        install_requires=[
-            'sqlalchemy[asyncio]==1.4.41',
-            'tornado==6.2',
-            'python-dateutil==2.8.2'
-        ],
+        install_requires=_find_requires(),
         packages=find_packages('src'),
         package_dir={'': 'src'},
         entry_points={
