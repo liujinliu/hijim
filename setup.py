@@ -29,7 +29,9 @@ def _setup():
         packages=find_packages('src'),
         package_dir={'': 'src'},
         entry_points={
-            'console_scripts': []
+            'console_scripts': [
+                'server-start=hijim.bin.main:start_server'
+            ]
             },
         classifiers=[
             'Environment :: Console',

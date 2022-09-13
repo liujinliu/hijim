@@ -4,11 +4,11 @@ import threading
 
 class SingletonMixin:
 
-    __LOCK = threading.Lock()
-    __instance = None
+    _LOCK = threading.Lock()
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
-        if not cls.__instance:
-            with cls.__LOCK:
-                cls.__instance = super().__new__(cls, *args, **kwargs)
-        return cls.__instance
+        if not cls._instance:
+            with cls._LOCK:
+                cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance

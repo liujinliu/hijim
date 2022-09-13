@@ -28,8 +28,8 @@ class BaseError(Exception, metaclass=_MetaError):
     message = '内部错误'
     http_status = 500
 
-    def __init__(self, **kwargs):
-        self.msg = self.message.format(**kwargs)
+    def __init__(self, message=None, **kwargs):
+        self.msg = (message or self.message).format(**kwargs)
         super().__init__(**kwargs)
 
 

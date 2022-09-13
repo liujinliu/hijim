@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import functools
+from sqlalchemy import Column, DateTime, func, Integer, Boolean
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.future import select
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from collections import defaultdict
 from contextlib import asynccontextmanager
 from hijim.conf.config import DB_CONF
-from hijim.common.mixins import SingletonMixin
 
 
-Base = declarative_base()
+DbBase = declarative_base()
 
-_engine = create_async_engine(DB_CONF['conn'], **DB_CONF['engine_setting'])
+engine = create_async_engine(DB_CONF['conn'])
 _async_session = sessionmaker(
-    _engine, expire_on_commit=False, class_=AsyncSession
+    engine, expire_on_commit=False, class_=AsyncSession
 )
 
 
-class SessionManager(SingletonMixin):
+class SessionManager:
 
     def __init__(self):
         self.__task_local = defaultdict(list)
@@ -46,18 +47,18 @@ class SessionManager(SingletonMixin):
             return self.__task_local[task_id][-1]
 
 
-def use_db_session():
+_session_manager = SessionManager()
 
-    def wrapper(function):
 
-        @functools.wraps(function)
-        async def f(*args, **kwargs):
-            async with SessionManager().use():
-                ret = await function(*args, **kwargs)
-            return ret
-        return f
+def use_db_session(function):
 
-    return wrapper
+    @functools.wraps(function)
+    async def f(*args, **kwargs):
+        async with _session_manager.use():
+            ret = await function(*args, **kwargs)
+        return ret
+
+    return f
 
 
 def with_db_session(function):
@@ -65,7 +66,31 @@ def with_db_session(function):
     @functools.wraps(function)
     async def f(*args, **kwargs):
         assert 'session' not in kwargs, '"session" keyword has been occupied'
-        kwargs.update({'session': SessionManager().get()})
+        kwargs.update({'session': _session_manager.get()})
         ret = await function(*args, **kwargs)
         return ret
     return f
+
+
+class TableBase:
+    id = Column(Integer, primary_key=True)
+    create_date = Column(DateTime, server_default=func.now())
+
+    # required in order to access columns with server defaults
+    # or SQL expression defaults, subsequent to a flush, without
+    # triggering an expired load
+    __mapper_args__ = {"eager_defaults": True}
+
+    @with_db_session
+    async def create(self, *, session=None):
+        session.add(self)
+
+    @classmethod
+    @with_db_session
+    async def get_by_id(cls, _id, *, session=None):
+        result = await session.execute(select(cls))
+        return result.scalars().first()
+
+
+class TableTombstoneMixin:
+    is_delete = Column(Boolean, server_default='0')

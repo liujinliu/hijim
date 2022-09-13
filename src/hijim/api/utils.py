@@ -15,7 +15,7 @@ def schema_parse(query_data: Schema = None, json_data: Schema = None,
                 data[key] = value[-1]
             else:
                 data[key] = value
-        return schema.load(data).data
+        return schema.load(data)
 
     def _load_form(handler, schema):
         data = {}
@@ -24,7 +24,7 @@ def schema_parse(query_data: Schema = None, json_data: Schema = None,
                 data[key] = value[-1]
             else:
                 data[key] = value
-        return schema.load(data).data
+        return schema.load(data)
 
     def _load_json(handler, schema):
         content_type = handler.request.headers.get('Content-Type')
@@ -35,23 +35,23 @@ def schema_parse(query_data: Schema = None, json_data: Schema = None,
         except Exception:
             raise ClientParaError(detail='invalid content format')
         else:
-            return schema.load(data).data
+            return schema.load(data)
 
     def wrapper(function):
 
         @functools.wraps(function)
-        def f(handler, *args, **kwargs):
+        async def f(handler, *args, **kwargs):
             if query_data and isinstance(query_data, Schema):
-                kwargs.update({'query_schema': _load_query(handler, query_data)})
+                kwargs.update({'query_data': _load_query(handler, query_data)})
             if form_data and isinstance(form_data, Schema):
-                kwargs.update({'form_schema': _load_form(handler, form_data)})
+                kwargs.update({'form_data': _load_form(handler, form_data)})
             if json_data and isinstance(json_data, Schema):
-                kwargs.update({'json': _load_json(handler, json_data)})
+                kwargs.update({'json_data': _load_json(handler, json_data)})
             ret = await function(handler, *args, **kwargs)
             handler.set_header('Content-Type',
                                'application/json; charset=UTF-8')
             if reply_data and isinstance(reply_data, Schema):
-                data = reply_data.dump(ret['data']).data
+                data = reply_data.dump(ret['data'])
                 return handler.finish(dict(code=ret.get('code', 0),
                                            msg=ret.get('msg', ''),
                                            data=data))
