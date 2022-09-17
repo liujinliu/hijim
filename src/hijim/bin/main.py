@@ -13,12 +13,6 @@ from hijim.common.app import HijimApp
 from hijim.common.logging import PLOG, init_logging
 from hijim.bin.options import * # noqa
 
-_HIJIM_ROOT = \
-    os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.abspath(__file__))))
-
 
 async def init_db():
     from hijim.common.db import DbBase, engine
@@ -43,13 +37,12 @@ class HijimServer:
     def init_app(self):
         init_route()
         settings = {
-            'autoreload': False,
             'gzip': True,
+            'autoreload': options.debug
         }
         self.app = WebApplication(handlers=Route.get_routes(), **settings)
 
     async def run(self):
-        HijimApp().init_workspace()
         await init_db()
         self.app.listen(8000)
         await asyncio.Event().wait()
@@ -58,6 +51,7 @@ class HijimServer:
         parse_command_line()
         init_logging()
         HijimConf().conf_init(options.hijim_conf)
+        HijimApp().init_workspace()
         self.init_app()
         asyncio.run(self.run())
 

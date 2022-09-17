@@ -4,7 +4,8 @@ import sys
 import os
 from configparser import ConfigParser
 from .utils import HijimConf, singleton
-
+from .constant import HIJIM_ROOT_PATH
+from .logging import PLOG
 
 @singleton
 class HijimApp:
@@ -15,7 +16,10 @@ class HijimApp:
     def init_workspace(self, workspace=None):
         if not workspace:
             conf = HijimConf().APP
-            workspace = conf['workspace']
+            workspace = conf['workspace'] or os.path.join(HIJIM_ROOT_PATH,
+                                                          'tests', 'workspace')
+        PLOG.info(f'workspace is {workspace}')
+        os.makedirs(workspace, exist_ok=True)
         if workspace not in sys.path:
             sys.path.append(workspace)
         self.__workspace = workspace
