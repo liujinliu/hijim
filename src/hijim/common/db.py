@@ -82,12 +82,17 @@ class TableBase:
     @with_db_session
     async def create(self, *, session=None):
         session.add(self)
+        await session.flush()
 
     @classmethod
     @with_db_session
     async def get_by_id(cls, _id, *, session=None):
         result = await session.execute(select(cls))
         return result.scalars().first()
+
+    @with_db_session
+    async def delete(self, *, session=None):
+        await session.delete(self)
 
 
 class TableTombstoneMixin:

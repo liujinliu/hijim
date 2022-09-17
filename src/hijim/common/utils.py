@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from configparser import ConfigParser
 import threading
 import functools
@@ -17,6 +19,19 @@ def singleton(cls):
                     instances[cls] = cls(*args, **kwargs)
         return instances[cls]
     return wrapper
+
+
+_executor_pool = ThreadPoolExecutor(4)
+
+
+def with_executor(function):
+
+    @functools.wraps(function)
+    async def inner(*args, **kwargs):
+        func = functools.partial(function, *args, **kwargs)
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(_executor_pool, func)
+    return inner
 
 
 @singleton

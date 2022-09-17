@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
+from configparser import ConfigParser
 from .utils import HijimConf, singleton
 
 
@@ -21,6 +23,11 @@ class HijimApp:
     @property
     def workspace(self):
         return self.__workspace
+
+    def get_app_ini(self, app_name):
+        config = ConfigParser()
+        config.read(os.path.join(self.__workspace, app_name, 'app.ini'))
+        return config
 
     def app_upload(self, app_name, file):
         """
