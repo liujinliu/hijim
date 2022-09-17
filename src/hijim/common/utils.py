@@ -37,7 +37,10 @@ def with_executor(function):
 @singleton
 class HijimConf:
 
-    def __init__(self, conf_file=None):
+    def __init__(self):
+        self.config = None
+
+    def conf_init(self, conf_file=None):
         if not conf_file:
             conf_path = os.path.dirname(
                 os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

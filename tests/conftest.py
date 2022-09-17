@@ -6,8 +6,10 @@ import pytest
 import asyncio
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from hijim.bin.main import init_db
+from hijim.common.utils import HijimConf
 from hijim.common.app import HijimApp
 
+HijimConf().conf_init()
 asyncio.run(init_db())
 test_workspace = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'workspace')
@@ -67,6 +69,7 @@ class _WrappedHTTPClient:
 def app():
     from hijim.bin.main import HijimServer
     server = HijimServer()
+    server.init_app()
     return server.app
 
 
