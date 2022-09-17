@@ -9,17 +9,18 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from collections import defaultdict
 from contextlib import asynccontextmanager
-from hijim.conf.config import DB_CONF
+from hijim.common.utils import singleton, HijimConf
 
 
 DbBase = declarative_base()
 
-engine = create_async_engine(DB_CONF['conn'])
+engine = create_async_engine(HijimConf().DB['conn'])
 _async_session = sessionmaker(
     engine, expire_on_commit=False, class_=AsyncSession
 )
 
 
+@singleton
 class SessionManager:
 
     def __init__(self):
@@ -47,14 +48,11 @@ class SessionManager:
             return self.__task_local[task_id][-1]
 
 
-_session_manager = SessionManager()
-
-
 def use_db_session(function):
 
     @functools.wraps(function)
     async def f(*args, **kwargs):
-        async with _session_manager.use():
+        async with SessionManager().use():
             ret = await function(*args, **kwargs)
         return ret
 
@@ -66,7 +64,7 @@ def with_db_session(function):
     @functools.wraps(function)
     async def f(*args, **kwargs):
         assert 'session' not in kwargs, '"session" keyword has been occupied'
-        kwargs.update({'session': _session_manager.get()})
+        kwargs.update({'session': SessionManager().get()})
         ret = await function(*args, **kwargs)
         return ret
     return f

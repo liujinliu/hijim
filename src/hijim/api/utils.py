@@ -60,4 +60,3 @@ def schema_parse(query_data: Schema = None, json_data: Schema = None,
             return ret
         return f
     return wrapper
-

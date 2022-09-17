@@ -8,6 +8,7 @@ from hijim.api.base import Route
 import hijim.api
 from importlib import import_module
 from hijim.common.db import DbBase, engine
+from hijim.common.app import HijimApp
 
 
 LOG = logging.getLogger()
@@ -29,8 +30,7 @@ def init_route():
 
 class HijimServer:
 
-    def init_app(self):
-        # asyncio.run(init_db())
+    def __init__(self):
         init_route()
         settings = {
             'autoreload': False,
@@ -39,11 +39,12 @@ class HijimServer:
         self.app = WebApplication(handlers=Route.get_routes(), **settings)
 
     async def run(self):
+        HijimApp().init_workspace()
+        await init_db()
         self.app.listen(8000)
         await asyncio.Event().wait()
 
     def start(self):
-        self.init_app()
         asyncio.run(self.run())
 
 

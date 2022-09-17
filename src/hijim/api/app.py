@@ -9,7 +9,7 @@ from .utils import schema_parse
 
 @Route('app')
 class AppHandler(BaseHandler):
-    """AppHandler is the api interface of for app management"""
+    """AppHandler is the api interface for app management"""
 
     @use_db_session
     async def __do_post(self, json_data):
@@ -20,8 +20,11 @@ class AppHandler(BaseHandler):
         """
         This interface serve the request of app create
         Args:
-            json_data: the parameters for app create
-
+            json_data:
+                the parameters for app create, here is an example::
+                    {
+                        name: "demo_app"
+                    }
         Returns:
             N/A
         """

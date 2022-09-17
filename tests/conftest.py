@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
-os.environ.setdefault('DB_CONN', "sqlite+aiosqlite:///unitestdb")
-
 import urllib
 import json
 import pytest
+import asyncio
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from hijim.bin.main import init_db
+from hijim.common.app import HijimApp
+
+asyncio.run(init_db())
+test_workspace = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'workspace')
+
+HijimApp().init_workspace(test_workspace)
 
 
 class _WrappedHTTPResponse:
@@ -60,7 +67,6 @@ class _WrappedHTTPClient:
 def app():
     from hijim.bin.main import HijimServer
     server = HijimServer()
-    server.init_app()
     return server.app
 
 

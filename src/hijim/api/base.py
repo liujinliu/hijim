@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from tornado.web import RequestHandler, url
+from tornado.web import RequestHandler
 from traceback import format_tb
 from marshmallow import ValidationError as SchemaValidationError
 from hijim.common.exceptions import BaseError
@@ -48,4 +48,3 @@ class BaseHandler(RequestHandler):
                 self.set_status(400)
                 return
             super().write_error(status_code, **kwargs)
-
