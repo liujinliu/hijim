@@ -3,15 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to hijim's documentation!
-=================================
+Welcome to hijim
+================
 
-Contents:
+Welcome to hijim's documentatio. You can find a full api reference in the :doc:`api` section
+
+
+API Reference
+-------------
 
 .. toctree::
    :maxdepth: 2
 
-   web_api
+   api
 
 
 
