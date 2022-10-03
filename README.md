@@ -10,6 +10,11 @@ pip install -r requirments-dev.txt
 flake8
 ```
 
+## unit test
+```commandline
+pytest [-s] tests # this will show all the detail print infomation
+```
+
 ## build doc
 ```commandline
 cd doc && make html

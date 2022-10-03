@@ -14,7 +14,7 @@ class AbstractWorkEngine(ABC):
     independent module"""
 
     @abstractmethod
-    def do_run(self, app, run_id, paras_list):
+    def do_run(self, app, *, run_id, paras_list):
         """
         Each engine should implement this method to do the real job.
 
@@ -27,7 +27,7 @@ class AbstractWorkEngine(ABC):
         """
         pass
 
-    def run(self, app, run_id, paras_list: dict = None):
+    def run(self, app, *, run_id, paras_list: dict = None):
         """
         This the entry for the work engine
 
@@ -38,4 +38,4 @@ class AbstractWorkEngine(ABC):
 
         Returns:
         """
-        self.do_run(app, run_id, paras_list)
+        self.do_run(app, run_id=run_id, paras_list=paras_list)
