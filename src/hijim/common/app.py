@@ -7,6 +7,7 @@ from .utils import HijimConf, singleton
 from .constant import HIJIM_ROOT_PATH
 from .logging import PLOG
 
+
 @singleton
 class HijimApp:
 
@@ -20,9 +21,9 @@ class HijimApp:
                                                           'tests', 'workspace')
         PLOG.info(f'workspace is {workspace}')
         os.makedirs(workspace, exist_ok=True)
-        if workspace not in sys.path:
-            sys.path.append(workspace)
         self.__workspace = workspace
+        if self.__workspace not in sys.path:
+            sys.path.append(self.__workspace)
 
     @property
     def workspace(self):
@@ -38,9 +39,9 @@ class HijimApp:
         Args:
             app_name:
                 the *file* will be extract to *workspace*, and the folder will
-                be rename to *app_name*
+                be renamed to *app_name*
             file:
-                an compressed file, contains all the app files
+                a compressed file, contains all the app files
         Returns:
         """
         pass

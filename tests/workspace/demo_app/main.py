@@ -22,5 +22,5 @@ class App(AbstractApp):
         if not paras_list:
             return
         for paras in paras_list:
-            action, value = paras.lsplit('::', 1)
+            action, value = paras.split('::', 1)
             self.__run_by_action(action, value)

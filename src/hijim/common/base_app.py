@@ -26,7 +26,7 @@ class AbstractApp(ABC):
             paras_list:
                 each para item is a string with the pattern
                 *keyword::paras*
-                how to parse the para is depend on the app self
+                how to parse the para depends on the app self
         Returns:
             return with no exception will be treated as success, basically it
             should return a *dict*
@@ -34,13 +34,13 @@ class AbstractApp(ABC):
 
     def __record_the_result(self, run_id, result: dict):
         """
-        call the restful of hijim to record the result on run_id
+        call the RestFul of hijim to record the result on run_id
         Returns:
         """
         requests.post(f'{self._HIJIM_ENDPOINT}/api/v1/unit-result',
                       json=dict(runId=run_id, result=result))
 
-    def run(self, run_id, *, paras_list) -> None:
+    def run(self, run_id, paras_list) -> None:
         try:
             res = self.do_run(paras_list)
         except Exception as e:

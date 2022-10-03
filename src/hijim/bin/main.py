@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pkgutil
-import os
 import asyncio
 from tornado.web import Application as WebApplication
 from tornado.options import parse_command_line, options
@@ -12,6 +11,10 @@ from hijim.common.utils import HijimConf
 from hijim.common.app import HijimApp
 from hijim.common.logging import PLOG, init_logging
 from hijim.bin.options import * # noqa
+from hijim.common.engine_register import EngineRegister
+from hijim.plugin.engine.simple_thread.main import (
+    Engine as SimpleThreadEngine)
+from hijim.common.constant import InnerEngineName
 
 
 async def init_db():
@@ -29,12 +32,19 @@ def init_route():
         import_module(f'hijim.api.{name}', package=__package__)
 
 
+def inner_engine_reg():
+    register = EngineRegister()
+    register.register(name=InnerEngineName.SIMPLE_THREAD.name,
+                      engine=SimpleThreadEngine)
+
+
 class HijimServer:
 
     def __init__(self):
         self.app = None
 
     def init_app(self):
+        inner_engine_reg()
         init_route()
         settings = {
             'gzip': True,

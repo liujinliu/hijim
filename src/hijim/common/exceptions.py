@@ -4,7 +4,8 @@ from enum import Enum
 
 
 class _ErrorCode(Enum):
-    CLIENT_PARA_ERROR = 400001
+    CLIENT_PARA_ERROR = 400_001
+    ENGINE_REG_ERROR = 400_002
 
 
 class _MetaError(type):
@@ -37,3 +38,9 @@ class ClientParaError(BaseError):
     code = _ErrorCode.CLIENT_PARA_ERROR.value
     http_status = 403
     message = 'client param error({detail})'
+
+
+class EngineRegError(BaseError):
+    code = _ErrorCode.ENGINE_REG_ERROR.value
+    http_status = 400
+    message = 'engine register error({detail})'

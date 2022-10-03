@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import pytest
+import time
 from hijim.model.app import App
 from .helper import get_mod_by_id, delete_app_by_name
+from hijim.common.engine_register import EngineRegister
+from hijim.common.constant import InnerEngineName
 
 
 @pytest.mark.gen_test
@@ -21,3 +24,11 @@ async def test_app_create(client):
     assert resp.code == 200
     assert resp.json_data['config']['info']['name'] == 'demo_app'
 
+
+# 单独运行时候需加上client这个fixture
+def test_app_run_in_engine():
+    register = EngineRegister()
+    app_name = 'demo_app'
+    engine = register.get_engine(InnerEngineName.SIMPLE_THREAD.name)()
+    engine.run(app_name, 0, ['ACTION0::para0=0,para1=1', 'ACTION1::para0=2'])
+    time.sleep(1)
