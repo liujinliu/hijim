@@ -32,18 +32,18 @@ class AbstractApp(ABC):
             should return a *dict*
         """
 
-    def __record_the_result(self, run_id, result: dict):
+    def __record_the_result(self, task_id, result: dict):
         """
         call the RestFul of hijim to record the result on run_id
         Returns:
         """
         requests.post(f'{self._HIJIM_ENDPOINT}/api/v1/unit-result',
-                      json=dict(runId=run_id, result=result))
+                      json=dict(taskId=task_id, result=result))
 
-    def run(self, run_id, paras_list) -> None:
+    def run(self, task_id, paras_list) -> None:
         try:
             res = self.do_run(paras_list)
         except Exception as e:
             LOG.error(e, exc_info=True)
             res = dict(error=1, data=str(e))
-        self.__record_the_result(run_id, result=res)
+        self.__record_the_result(task_id, result=res)

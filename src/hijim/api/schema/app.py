@@ -20,7 +20,7 @@ class ResAppDetail(Schema):
     author = fields.String(required=True)
     version = fields.String(required=True)
     description = fields.String(required=True)
-    config = fields.Raw(default=None)
+    config = fields.Raw(dump_default=None)
 
 
 res_app_detail = ResAppDetail()

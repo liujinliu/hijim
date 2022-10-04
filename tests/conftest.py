@@ -4,6 +4,7 @@ import urllib
 import json
 import pytest
 import asyncio
+import shutil
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from hijim.bin.main import init_db
 from hijim.common.utils import HijimConf
@@ -11,8 +12,13 @@ from hijim.common.app import HijimApp
 
 HijimConf().conf_init()
 asyncio.run(init_db())
-test_workspace = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'workspace')
+test_root = os.path.dirname(os.path.abspath(__file__))
+demo_app_path = os.path.join(test_root, 'demo_app')
+test_workspace = os.path.join(test_root, 'unittest_workspace')
+
+shutil.rmtree(test_workspace, ignore_errors=True)
+os.makedirs(test_workspace, exist_ok=True)
+shutil.copytree(demo_app_path, os.path.join(test_workspace, 'demo_app'))
 
 HijimApp().init_workspace(test_workspace)
 

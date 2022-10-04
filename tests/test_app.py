@@ -30,6 +30,6 @@ def test_app_run_in_engine():
     register = EngineRegister()
     app_name = 'demo_app'
     engine = register.get_engine(InnerEngineName.SIMPLE_THREAD.name)()
-    engine.run(app_name, run_id=0,
+    engine.run(app_name, task_id=0,
                paras_list=['ACTION0::para0=0,para1=1', 'ACTION1::para0=2'])
     time.sleep(1)

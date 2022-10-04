@@ -14,28 +14,28 @@ class AbstractWorkEngine(ABC):
     independent module"""
 
     @abstractmethod
-    def do_run(self, app, *, run_id, paras_list):
+    def do_run(self, app, *, task_id, paras_list):
         """
         Each engine should implement this method to do the real job.
 
         Args:
             app: The app, and the entry class is *<app-name>*.main.App
-            run_id: the run_id will be used for the app to send result to hijim
+            task_id: will be used for the app to send result to hijim
             paras_list:
 
         Returns:
         """
         pass
 
-    def run(self, app, *, run_id, paras_list: dict = None):
+    def run(self, app, *, task_id, paras_list: dict = None):
         """
         This the entry for the work engine
 
         Args:
-            run_id: the id for record the result
+            task_id: the id for record the result
             app: app name that passed to the task execute engine
             paras_list: the paras pass to the app
 
         Returns:
         """
-        self.do_run(app, run_id=run_id, paras_list=paras_list)
+        self.do_run(app, task_id=task_id, paras_list=paras_list)
