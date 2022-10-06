@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import platform
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from configparser import ConfigParser
@@ -50,3 +51,16 @@ class HijimConf:
 
     def __getattr__(self, item):
         return self.config[item]
+
+    @property
+    def tmp_path(self):
+        if platform.system().lower() == 'linux':
+            tmp_path = '/tmp/hijim'
+        else:
+            root_path = os.path.dirname(
+                os.path.dirname(
+                    os.path.dirname(
+                        os.path.dirname(os.path.abspath(__file__)))))
+            tmp_path = os.path.join(root_path, 'tests', 'tmp')
+        os.makedirs(tmp_path, exist_ok=True)
+        return tmp_path

@@ -5,6 +5,8 @@ from marshmallow import Schema, fields
 
 class ReqAppCreate(Schema):
     name = fields.String(required=True)
+    file_ini = fields.String(required=True, data_key='fileIni')
+    file_main = fields.String(required=True, data_key='fileMain')
 
 
 class ResAppCreate(Schema):

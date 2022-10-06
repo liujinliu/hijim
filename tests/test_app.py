@@ -11,7 +11,8 @@ from hijim.common.constant import InnerEngineName
 async def test_app_create(client):
     await delete_app_by_name('demo_app')
     url = '/api/v1/app'
-    data = dict(name='demo_app')
+    data = dict(name='demo_app', fileIni='demo_app.ini',
+                fileMain='demo_app.py')
     res = await client.fetch(uri=url, method='POST', json_data=data)
     assert res.code == 200
     assert res.json_data['id'] > 0

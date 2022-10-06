@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import os
+import pathlib
+import shutil
 from collections import defaultdict
 from hijim.model.app import App
 from hijim.common.app import HijimApp
-from hijim.common.utils import with_executor
+from hijim.common.utils import with_executor, HijimConf
 
 
 class AppService:
@@ -13,13 +16,27 @@ class AppService:
         return HijimApp().get_app_ini(app_name=app_name)
 
     @classmethod
-    async def app_create(cls, *, name):
+    @with_executor
+    def __copy_app_files(cls, app_name, file_ini, file_main):
+        workspace = HijimApp().workspace
+        app_path = os.path.join(workspace, app_name)
+        os.makedirs(app_path, exist_ok=True)
+        tmp_path = HijimConf().tmp_path
+        pathlib.Path(os.path.join(app_path, '__init__.py')).touch()
+        shutil.move(os.path.join(tmp_path, file_ini),
+                    os.path.join(app_path, 'app.ini'))
+        shutil.move(os.path.join(tmp_path, file_main),
+                    os.path.join(app_path, 'main.py'))
+
+    @classmethod
+    async def app_create(cls, *, name, file_ini, file_main):
         """
         Args:
             name: name of the app
         Returns:
         """
         config = await cls.__read_config_from_ini(app_name=name)
+        await cls.__copy_app_files(name, file_ini, file_main)
         app_model = App(name=name, author=config['info']['author'],
                         version=config['info']['version'],
                         description=config['info']['description'])

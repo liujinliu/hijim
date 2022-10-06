@@ -15,10 +15,17 @@ asyncio.run(init_db())
 test_root = os.path.dirname(os.path.abspath(__file__))
 demo_app_path = os.path.join(test_root, 'demo_app')
 test_workspace = os.path.join(test_root, 'unittest_workspace')
+test_tmp_path = os.path.join(test_root, 'tmp')
 
 shutil.rmtree(test_workspace, ignore_errors=True)
 os.makedirs(test_workspace, exist_ok=True)
+shutil.rmtree(test_tmp_path, ignore_errors=True)
+os.makedirs(test_tmp_path, exist_ok=True)
 shutil.copytree(demo_app_path, os.path.join(test_workspace, 'demo_app'))
+shutil.copy(os.path.join(demo_app_path, 'app.ini'),
+            os.path.join(test_tmp_path, 'demo_app.ini'))
+shutil.copy(os.path.join(demo_app_path, 'main.py'),
+            os.path.join(test_tmp_path, 'demo_app.py'))
 
 HijimApp().init_workspace(test_workspace)
 

@@ -6,6 +6,7 @@ from enum import Enum
 class _ErrorCode(Enum):
     CLIENT_PARA_ERROR = 400_001
     ENGINE_REG_ERROR = 400_002
+    FILE_UPLOAD_ERROR = 400_003
 
 
 class _MetaError(type):
@@ -44,3 +45,9 @@ class EngineRegError(BaseError):
     code = _ErrorCode.ENGINE_REG_ERROR.value
     http_status = 400
     message = 'engine register error({detail})'
+
+
+class FileUploadError(BaseError):
+    code = _ErrorCode.FILE_UPLOAD_ERROR.value
+    http_status = 400
+    message = 'file upload error({detail})'

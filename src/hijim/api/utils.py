@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
+from typing import Union
 import functools
 from marshmallow import Schema
 from hijim.common.exceptions import ClientParaError
 
 
 def schema_parse(query_data: Schema = None, json_data: Schema = None,
-                 form_data: Schema = None, reply_data: Schema = None):
+                 form_data: Schema = None,
+                 reply_data: Union[Schema, bool] = None):
 
     def _load_query(handler, schema: Schema):
         data = {}
