@@ -22,3 +22,8 @@ async def delete_app_by_name(name):
     mods = await get_app_by_name(name)
     for mod in mods:
         await mod.delete()
+
+
+@use_db_session
+async def get_app_list():
+    return await App.get_list()

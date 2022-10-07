@@ -35,8 +35,8 @@ class AppService:
             name: name of the app
         Returns:
         """
-        config = await cls.__read_config_from_ini(app_name=name)
         await cls.__copy_app_files(name, file_ini, file_main)
+        config = await cls.__read_config_from_ini(app_name=name)
         app_model = App(name=name, author=config['info']['author'],
                         version=config['info']['version'],
                         description=config['info']['description'])
@@ -53,3 +53,11 @@ class AppService:
                 config_map[section][k] = config[section][k]
         return dict(name=app.name, author=app.author, version=app.version,
                     description=app.description, config=config_map)
+
+    @classmethod
+    async def app_list(cls, *, page=1, page_size=10):
+        ret = await App.get_list(page=page, page_size=page_size)
+        apps = [dict(name=x.name, author=x.author, version=x.version,
+                     create_at=x.create_at)
+                for x in ret]
+        return dict(apps=apps)

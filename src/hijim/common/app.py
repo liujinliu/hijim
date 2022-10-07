@@ -33,15 +33,3 @@ class HijimApp:
         config = ConfigParser()
         config.read(os.path.join(self.__workspace, app_name, 'app.ini'))
         return config
-
-    def app_upload(self, app_name, file):
-        """
-        Args:
-            app_name:
-                the *file* will be extract to *workspace*, and the folder will
-                be renamed to *app_name*
-            file:
-                a compressed file, contains all the app files
-        Returns:
-        """
-        pass

@@ -4,7 +4,7 @@ from hijim.service.app import AppService
 from hijim.common.db import use_db_session
 from .base import BaseHandler, Route
 from .schema.app import (
-    req_app_create, res_app_create, res_app_detail)
+    req_app_create, res_app_create, res_app_detail, req_app_list, res_app_list)
 from .utils import schema_parse
 
 
@@ -30,6 +30,15 @@ class AppHandler(BaseHandler):
             N/A
         """
         ret = await self.__do_post(json_data)
+        return dict(data=ret)
+
+    @use_db_session
+    async def __do_get(self, query_data):
+        return await AppService.app_list(**query_data)
+
+    @schema_parse(query_data=req_app_list, reply_data=res_app_list)
+    async def get(self, *, query_data):
+        ret = await self.__do_get(query_data)
         return dict(data=ret)
 
 

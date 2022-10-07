@@ -2,7 +2,8 @@
 import pytest
 import time
 from hijim.model.app import App
-from .helper import get_mod_by_id, delete_app_by_name
+from .helper import (
+    get_mod_by_id, delete_app_by_name, get_app_list)
 from hijim.common.engine_register import EngineRegister
 from hijim.common.constant import InnerEngineName
 
@@ -24,6 +25,10 @@ async def test_app_create(client):
     resp = await client.fetch(url)
     assert resp.code == 200
     assert resp.json_data['config']['info']['name'] == 'demo_app'
+    url = '/api/v1/app'
+    resp = await client.fetch(url)
+    assert resp.code == 200
+    assert len(resp.json_data['apps']) > 0
 
 
 # 单独运行时候需加上client这个fixture

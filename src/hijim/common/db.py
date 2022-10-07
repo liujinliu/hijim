@@ -72,7 +72,7 @@ def with_db_session(function):
 
 class TableBase:
     id = Column(Integer, primary_key=True)
-    create_date = Column(DateTime, server_default=func.now())
+    create_at = Column(DateTime, server_default=func.now())
 
     # required in order to access columns with server defaults
     # or SQL expression defaults, subsequent to a flush, without
@@ -87,12 +87,21 @@ class TableBase:
     @classmethod
     @with_db_session
     async def get_by_id(cls, _id, *, session=None):
-        result = await session.execute(select(cls))
+        result = await session.execute(select(cls).filter(cls.id == _id))
         return result.scalars().first()
 
     @with_db_session
     async def delete(self, *, session=None):
         await session.delete(self)
+
+    @classmethod
+    @with_db_session
+    async def get_list(cls, *, page=0, page_size=0, session=None):
+        q = select(cls).order_by(cls.id.desc())
+        if page and page_size:
+            q = q.limit(page_size).offset(page_size * (page - 1))
+        result = await session.execute(q)
+        return result.scalars().all()
 
 
 class TableTombstoneMixin:

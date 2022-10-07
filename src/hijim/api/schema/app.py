@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from marshmallow import Schema, fields
+from .common import PageSchemaMixin
 
 
 class ReqAppCreate(Schema):
@@ -26,3 +27,22 @@ class ResAppDetail(Schema):
 
 
 res_app_detail = ResAppDetail()
+
+
+class ReqAppList(PageSchemaMixin):
+    pass
+
+
+class _AppItem(Schema):
+    name = fields.String(required=True)
+    author = fields.String(required=True)
+    version = fields.String(required=True)
+    create_at = fields.Date(data_key='createAt')
+
+
+class ResAppList(Schema):
+    apps = fields.Nested(_AppItem, many=True)
+
+
+req_app_list = ReqAppList()
+res_app_list = ResAppList()
