@@ -6,7 +6,7 @@
 Welcome to hijim
 ================
 
-Welcome to hijim's documentatio. You can find a full api reference in the :doc:`api` section
+Welcome to hijim's documentation. You can find a full api reference in the :doc:`api` section
 
 
 API Reference

@@ -12,3 +12,9 @@ AbstractWorkEngine
 .. autoclass:: hijim.common.base_work_engine.AbstractWorkEngine
    :members:
    :inherited-members:
+
+AbstractApp
+-------------------
+.. autoclass:: hijim.common.base_app.AbstractApp
+   :members:
+   :inherited-members:

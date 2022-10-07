@@ -37,7 +37,7 @@ class AbstractApp(ABC):
         call the RestFul of hijim to record the result on run_id
         Returns:
         """
-        requests.post(f'{self._HIJIM_ENDPOINT}/api/v1/unit-result',
+        requests.post(f'{self._HIJIM_ENDPOINT}/api/v1/task-result',
                       json=dict(taskId=task_id, result=result))
 
     def run(self, task_id, paras_list) -> None:
