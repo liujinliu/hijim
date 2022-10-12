@@ -8,20 +8,24 @@ from hijim.common.app import HijimApp
 from hijim.common.utils import with_executor, HijimConf
 
 
+_hijim_app = HijimApp()
+_hijim_conf = HijimConf()
+
+
 class AppService:
 
     @classmethod
     @with_executor
     def __read_config_from_ini(cls, app_name):
-        return HijimApp().get_app_ini(app_name=app_name)
+        return _hijim_app.get_app_ini(app_name=app_name)
 
     @classmethod
     @with_executor
     def __copy_app_files(cls, app_name, file_ini, file_main):
-        workspace = HijimApp().workspace
+        workspace = _hijim_app.workspace
         app_path = os.path.join(workspace, app_name)
         os.makedirs(app_path, exist_ok=True)
-        tmp_path = HijimConf().tmp_path
+        tmp_path = _hijim_conf.tmp_path
         pathlib.Path(os.path.join(app_path, '__init__.py')).touch()
         shutil.move(os.path.join(tmp_path, file_ini),
                     os.path.join(app_path, 'app.ini'))

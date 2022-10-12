@@ -17,6 +17,11 @@ from hijim.plugin.engine.simple_thread.main import (
 from hijim.common.constant import InnerEngineName
 
 
+_hijim_app = HijimApp()
+_engine_register = EngineRegister()
+_hijim_conf = HijimConf()
+
+
 async def init_db():
     from hijim.common.db import DbBase, engine
     for _, name, _ in pkgutil.iter_modules(hijim.model.__path__):
@@ -33,9 +38,8 @@ def init_route():
 
 
 def inner_engine_reg():
-    register = EngineRegister()
-    register.register(name=InnerEngineName.SIMPLE_THREAD.name,
-                      engine=SimpleThreadEngine)
+    _engine_register.register(name=InnerEngineName.SIMPLE_THREAD.name,
+                              engine=SimpleThreadEngine)
 
 
 class HijimServer:
@@ -60,8 +64,8 @@ class HijimServer:
     def start(self):
         parse_command_line()
         init_logging()
-        HijimConf().conf_init(options.hijim_conf)
-        HijimApp().init_workspace()
+        _hijim_conf.conf_init(options.hijim_conf)
+        _hijim_app.init_workspace()
         self.init_app()
         asyncio.run(self.run())
 

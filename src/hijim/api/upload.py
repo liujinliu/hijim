@@ -9,6 +9,9 @@ from .utils import schema_parse
 from .schema.upload import res_file_upload
 
 
+_hijim_conf = HijimConf()
+
+
 @Route('upload')
 class FileUploadHandler(BaseHandler):
 
@@ -25,5 +28,5 @@ class FileUploadHandler(BaseHandler):
         meta = file_metas[0]
         filename = uuid.uuid4().hex
         await self.__store_file(
-            os.path.join(HijimConf().tmp_path, filename), meta['body'])
+            os.path.join(_hijim_conf.tmp_path, filename), meta['body'])
         return dict(data=dict(tmp_file_name=filename))

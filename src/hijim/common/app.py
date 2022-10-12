@@ -8,6 +8,9 @@ from .constant import HIJIM_ROOT_PATH
 from .logging import PLOG
 
 
+_hijim_conf = HijimConf()
+
+
 @singleton
 class HijimApp:
 
@@ -16,7 +19,7 @@ class HijimApp:
 
     def init_workspace(self, workspace=None):
         if not workspace:
-            conf = HijimConf().APP
+            conf = _hijim_conf.APP
             workspace = conf['workspace'] or os.path.join(HIJIM_ROOT_PATH,
                                                           'tests', 'workspace')
         PLOG.info(f'workspace is {workspace}')

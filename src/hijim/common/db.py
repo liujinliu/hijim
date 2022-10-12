@@ -11,10 +11,10 @@ from collections import defaultdict
 from contextlib import asynccontextmanager
 from hijim.common.utils import singleton, HijimConf
 
-
+_hijim_conf = HijimConf()
 DbBase = declarative_base()
 
-engine = create_async_engine(HijimConf().DB['conn'])
+engine = create_async_engine(_hijim_conf.DB['conn'])
 _async_session = sessionmaker(
     engine, expire_on_commit=False, class_=AsyncSession
 )
