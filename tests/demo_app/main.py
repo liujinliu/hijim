@@ -13,9 +13,10 @@ class App(AbstractApp):
         }
 
     def __show_value(self, value):
-        print(value)
+        print(f'the value is {value}')
 
     def __run_by_action(self, action, value):
+        print(f'the action is {action}')
         self.__actions[action](value)
 
     def do_run(self, paras_list) -> dict:
